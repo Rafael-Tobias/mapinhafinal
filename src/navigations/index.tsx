@@ -7,8 +7,8 @@ import { useAuth } from "../hook/auth";
 export default function Navigation() {
   const { access_token } = useAuth();
   return (
-  <NavigationContainer>
-  {access_token ? <DrawerNavigation /> : <LoginNavigation />}
-  </NavigationContainer>
+    <NavigationContainer>
+      {access_token ? <DrawerNavigation /> : <LoginNavigation />}
+    </NavigationContainer>
   );
- }
+}

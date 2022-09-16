@@ -12,15 +12,15 @@ const Drawer = createDrawerNavigator();
 export default function HomeRoute() {
     return (
         <Drawer.Navigator
-                screenOption={{
+                screenOptions={{
                     headerShown: true,
-                    headerStyle: { backgroundColor: colors.primary},
-                    headerTintColor: colors.primary,
+                    headerStyle: { backgroundColor: colors.third},
+                    headerTintColor: 'white',
                     drawerStyle: {
-                        backgroundColor: colors.primary,
+                        backgroundColor: colors.third,
                     },
-                    drawerInactiveTintColor: colors.primary,
-                    drawerActiveTintColor: colors.primary,
+                    drawerInactiveTintColor: colors.black,
+                    drawerActiveTintColor: colors.white,
                 }}
             >
             <Drawer.Screen
@@ -33,7 +33,7 @@ export default function HomeRoute() {
                     )
                 }}
             />
-            <Drawer.Screen
+            {/* <Drawer.Screen
                 name="Chat"
                 component={ChatScreen}
                 options={{
@@ -42,7 +42,7 @@ export default function HomeRoute() {
                         <Ionicons name="chatbubbles" size={24} color={colors.primary} />
                     ),
                 }}
-            />
+            /> */}
             <Drawer.Screen
                 name="Mapa"
                 component={MapScreen}
@@ -53,17 +53,7 @@ export default function HomeRoute() {
                     ),
                 }}
             />
-            <Drawer.Screen
-                name="Sair"
-                component={SairScreen}
-                options={{
-                    drawerLabel: "Sair",
-                    drawerIcon: () => (
-                        <Ionicons name="exit" size={24} color={colors.primary} />
-                    ),
-                }}
-            />
-
+            
             <Drawer.Screen
                 name="Camera"
                 component={CameraScreen}
@@ -78,8 +68,9 @@ export default function HomeRoute() {
                     ),
                 }}
             />
+            
 
-            <Drawer.Screen
+            {/* <Drawer.Screen
                 name="Arquivos"
                 component={ArquivoScreen}
                 options={{
@@ -92,9 +83,9 @@ export default function HomeRoute() {
                         />
                     ),
                 }}
-            />  
+            />   */}
 
-            <Drawer.Screen
+            {/* <Drawer.Screen
                 name="QrCode"
                 component={QrCodeScreen}
                 options={{
@@ -107,7 +98,7 @@ export default function HomeRoute() {
                         />
                     ),
                 }}
-            />  
+            />   */}
 
             <Drawer.Screen
                 name="ChatNavigation"
@@ -120,8 +111,19 @@ export default function HomeRoute() {
                     ),
                 }}
             />  
-
             <Drawer.Screen
+                name="Sair"
+                component={SairScreen}
+                options={{
+                    drawerLabel: "Sair",
+                    drawerIcon: () => (
+                        <Ionicons name="exit" size={24} color='red' />
+                    ),
+                }}
+            />
+
+
+            {/* <Drawer.Screen
                 name="AudioVideo"
                 component={VideoAudioScreen}
                 options={{
@@ -134,7 +136,7 @@ export default function HomeRoute() {
                         />
                     ),
                 }}
-            />  
+            />   */}
         </Drawer.Navigator>
     );
 }
