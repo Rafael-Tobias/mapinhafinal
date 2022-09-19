@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    width: "500",
+    width: '100%',
   },
   input: {
     fontSize: 18,
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     borderColor: colors.secondary,
     borderRadius: 5,
     margin: 10,
+    color:'white'
   },
   label: {
     height: 2
@@ -88,6 +89,31 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: colors.white,
   },
+  imagem2:{
+    alignItems: 'center',
+    width: 80,
+    height: 80
+  },
+  viewimage:{
+    alignItems: 'center',
+    margin: 10
+  },
+  buttonTopPostion: {
+    position: "absolute",
+    top: "5%",
+    right:"5%",
+    marginRight: 100
+},
+buttonFlip2: {
+  position: "absolute",
+  top: "5%",
+  left: "5%",
+  color: colors.black,
+  width: 100,
+  backgroundColor: colors.black,
+  alignItems: "center",
+  borderRadius: 15,
+},
 })
 
 export default styles

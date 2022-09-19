@@ -30,8 +30,20 @@ export default function EnviarMensagem({ navigation }: ChatTypes) {
     const [selectedTopico, setSelectedTopico] = useState([])
     const [startOver, setStartOver] = useState(true);
     const [type, setType] = useState(Camera.Constants.Type.back);
+    const [previewVisible, setPreviewVisible] = useState(false);
+    const [capturedImage, setCapturedImage] = useState<any>(null);
+    
     let camera: Camera;
-
+    const __closeCamera = () => {
+        setStartOver(true);
+    };
+    const __takePicture = async () => {
+        if (!camera) return;
+        const photo = await camera.takePictureAsync();
+        console.log(photo);
+        setPreviewVisible(true);
+        setCapturedImage(photo);
+    };
     const takePicture = async () => {
         if (!camera) return;
         const options = { quality: 0.5, base64: true };
@@ -120,10 +132,14 @@ export default function EnviarMensagem({ navigation }: ChatTypes) {
                 >
                     {startOver ? (
                         <KeyboardAvoidingView style={styles.containerForm}>
+                            <View style={styles.viewimage}>
+                                <Image source={require("../../assets/favicon.png")} style={styles.imagem2}/>
+                            </View>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Título"
                                 onChangeText={(i) => handleChange({ titulo: i })}
+                                placeholderTextColor='white'
                             />
                             <TextInput
                                 style={styles.input}
@@ -131,6 +147,7 @@ export default function EnviarMensagem({ navigation }: ChatTypes) {
                                 numberOfLines={4}
                                 placeholder="Mensagem"
                                 onChangeText={(i) => handleChange({ mensagem: i })}
+                                placeholderTextColor='white'
                             />
                             <View style={styles.select}>
                                 <MultiSelect
@@ -152,13 +169,13 @@ export default function EnviarMensagem({ navigation }: ChatTypes) {
                                     style={styles.buttonImage}
                                     onPress={() => setStartOver(false)}
                                 >
-                                    <FontAwesome name="camera" size={24} color="black" />
+                                    <FontAwesome name="camera" size={24} color="white" />
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.buttonImage}
                                     onPress={pickImage}
                                 >
-                                    <FontAwesome name="image" size={24} color="black" />
+                                    <FontAwesome name="image" size={24} color="white" />
                                 </TouchableOpacity>
                                 {data?.imagem && (
                                     <Image source={{ uri: data.imagem.uri }} style={styles.img} />
@@ -177,45 +194,40 @@ export default function EnviarMensagem({ navigation }: ChatTypes) {
                         </KeyboardAvoidingView>
                     ) : (
                         <Camera
-                            style={styles.container}
-                            type={type}
-                            ref={(r) => {
-                                if (r) camera = r;
-                            }}
-                        >
-                            <View style={styles.buttonTop}>
-                                <View style={styles.buttonTopPosition}>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            setStartOver(true);
-                                            console.log("clicou");
-                                        }}
-                                    >
-                                        <Text style={styles.textClose}>X</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <TouchableOpacity
-                                    style={styles.buttonFlip}
-                                    onPress={() => {
-                                        setType(
-                                            type === Camera.Constants.Type.back
-                                                ? Camera.Constants.Type.front
-                                                : Camera.Constants.Type.back
-                                        );
+                                    style={styles.container}
+                                    type={type}
+                                    ref={(r) => {
+                                        if (r) camera = r;
                                     }}
                                 >
-                                    <Text style={styles.textFlip}>Inverter</Text>
-                                </TouchableOpacity>
-                                <View style={styles.viewTakePicture}>
-                                    <View style={styles.positionTakePicture}>
-                                        <TouchableOpacity
-                                            onPress={takePicture}
-                                            style={styles.buttonTakePicture}
-                                        />
+                                    <View style={styles.buttonTop}>
+                                        <View style={styles.buttonTopPostion}>
+                                                <TouchableOpacity onPress={__closeCamera} style={styles.buttonFlip2}>
+                                                    <Text style={styles.textClose}>X</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                            <TouchableOpacity
+                                                style={styles.buttonFlip}
+                                                onPress={() => {
+                                                    setType(
+                                                        type === Camera.Constants.Type.back
+                                                            ? Camera.Constants.Type.front
+                                                            : Camera.Constants.Type.back
+                                                    );
+                                                }}
+                                            >
+                                                <Text style={styles.textFlip}> Inverter </Text>
+                                            </TouchableOpacity>
+                                        <View style={styles.viewTakePicture}>
+                                            <View style={styles.positionTakePicture}>
+                                                <TouchableOpacity
+                                                    onPress={__takePicture}
+                                                    style={styles.buttonTakePicture}
+                                                />
+                                            </View>
+                                        </View>
                                     </View>
-                                </View>
-                            </View>
-                        </Camera>
+                                </Camera>
                     )}
                 </ImageBackground>
                 
