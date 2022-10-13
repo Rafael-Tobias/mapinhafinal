@@ -1,117 +1,110 @@
-import React, { useState, useEffect } from "react";
-import MapView, { Region, Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import styles from "./styles";
-import { Text, View, SafeAreaView } from "react-native";
-import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
+import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect, useRef } from 'react';
+import { Text, View, TouchableOpacity,KeyboardAvoidingView } from 'react-native';
+import {css} from './styles';
+import MapView from "react-native-maps";
+import * as Location from 'expo-location';
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
+import config from "../../config/index.json"
+import MapViewDirections from 'react-native-maps-directions';
+import {MaterialIcons} from "@expo/vector-icons";
 
 export default function App() {
-    const [location, setLocation] = useState<null | Location.LocationObject>(null);
-    const [region, setRegion] = useState<Region>();
-    const [marker, setMarker] = useState<Region[]>();
-    const [errorMsg, setErrorMsg] = useState<null | string>(null);
+  const mapEl=useRef(null);
+  const [origin,setOrigin]=useState(null);
+  const [destination,setDestination]=useState(null);
+  const [distance,setDistance]=useState(null);
+  const [price, setPrice]=useState(null);
 
-    async function handleBusca(data: string){
-        try {
-            const response = await Location.geocodeAsync(data);
-            if (response.length > 0){
-                const { latitude, longitude, altitude, accuracy} = response[0];
-                setLocation({
-                    coords: {
-                        ...response[0],
-                        altitude: altitude || 0,
-                        accuracy: accuracy || 0,
-                        altitudeAccuracy: null,
-                        heading: null,
-                        speed: null
-                    },
-                    timestamp: Date.now(),
-                });
-                setRegion({
-                    latitude,
-                    longitude,
-                    latitudeDelta: 0.006,
-                    longitudeDelta: 0.006,
-                });
-                setMarker([
-                    {
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.004,
-                        longitudeDelta: 0.004,
-                    },
-                ]);
-            }
-        } catch (error) {
-            console.log(error);
+  useEffect(()=>{
+    (async function(){
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
         }
-    }
-
-    useEffect(() => {
-        const handleLocation = async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                setErrorMsg("Permission to access location was denied");
-                return;
-            }
-            Location.setGoogleApiKey("AIzaSyASkiDH2uoIox33gZh88LUNFZf6KOz4th0")
-
-
-        let location = await Location.getCurrentPositionAsync();
-        if (location) {
-            setLocation(location);
-            setRegion({
+        if (status === 'granted') {
+            let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+            setOrigin({
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-                latitudeDelta: 0.006,
-                longitudeDelta: 0.006,
+                latitudeDelta: 0.000922,
+                longitudeDelta: 0.000421
+            })
+        } else {
+            throw new Error('Location permission not granted');
+        }
+    })();
+  },[]);
+  return (
+    <View style={css.container}>
+      <MapView
+        style={css.map}Ref
+        initialRegion={origin}
+        showsUserLocation={true}
+        zoomEnabled={true}
+        loadingEnabled={true}
+        ref={mapEl}
+      >
+        {destination &&
+          <MapViewDirections
+            origin={origin}
+            destination={destination}
+            apikey={config.googleApi}
+            strokeWidth={3}
+            onReady={result=>{
+              console.log(result)
+              console.log(distance)
+              setDistance(result.distance);
+              setPrice(((result.distance)*5.5)+7); //definindo preço
+              mapEl.current.fitToCoordinates(
+                result.coordinates,{
+                    edgePadding:{
+                        top:50,
+                        bottom:50,
+                        left:50,
+                        right:50
+                    }
+                }
+            );
+          }} 
+        />
+      }
+      </MapView>
+      <View style={css.search}>
+        <GooglePlacesAutocomplete
+            placeholder='Para onde vamos?'
+            onPress={(data, details = null) => {
+            setDestination({
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
+                latitudeDelta: 0.000922,
+                longitudeDelta: 0.000421
             });
 
-            setMarker([{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.004,
-                longitudeDelta: 0.004,
-            },]);
-        }
-    };
-    handleLocation();
-    }, []);
+        }}
+        query={{
+            key: config.googleApi,
+            language: 'pt-br',
+        }}
+        enablePoweredByContainer={false}
+        fetchDetails={true}
+        styles={{listView:{height:100}}}
+      />
 
-    let text = "Waiting..";
-    if (errorMsg) {
-        text = errorMsg;
-    } else if (location) {
-        text = JSON.stringify(location);
-    }
 
-    return(
-        <SafeAreaView style={styles.container}> 
-        <View style={styles.posicao}>
-            <GooglePlacesAutocomplete
-                placeholder="Pesquisar endereço"
-                minLength={7}
-                query={{
-                    key: "AIzaSyASkiDH2uoIox33gZh88LUNFZf6KOz4th0",
-                    language: "pt-BR",
-                }}
-                onPress={(data) => {
-                    handleBusca(data.description);
-                }}
-                onFail={(error) => console.error(error)}
-                styles={styles.google}
-            />
-        </View>
-        {!region && <Text style={styles.paragraph}> {text} </Text>}
-        {region && (
-            <MapView style={styles.map} region={region}>
-                {marker && 
-                    marker.map((item) => (
-                        <Marker key={item.latitude} coordinate={item}/>
-                    ))
-                }
-            </MapView>
-        )}
-        </SafeAreaView>
-    );
+  {distance &&
+    <View style={css.distance}>
+        <Text style={css.distance__text}>Distância: {distance.toFixed(2).replace('.',',')}km</Text>
+        <TouchableOpacity style={css.price}>
+            <Text style={css.price__text}><MaterialIcons name="payment" size={24} color="white" /> Pagar R${price.toFixed(2).replace('.',',')}</Text>
+        </TouchableOpacity>
+    </View>
+  }
+
+
+      </View>
+    </View>
+  );
 }
+
