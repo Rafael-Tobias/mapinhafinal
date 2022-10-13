@@ -38,6 +38,7 @@ export default function App() {
   },[]);
   return (
     <View style={css.container}>
+      <KeyboardAvoidingView>
       <MapView
         style={css.map}Ref
         initialRegion={origin}
@@ -89,7 +90,7 @@ export default function App() {
         }}
         enablePoweredByContainer={false}
         fetchDetails={true}
-        styles={{listView:{height:100}}}
+        styles={{listView:{height:300, zIndex:0}}}
       />
 
 
@@ -104,6 +105,7 @@ export default function App() {
 
 
       </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
