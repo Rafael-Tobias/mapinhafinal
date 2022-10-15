@@ -8,13 +8,17 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import config from "../../config/index.json"
 import MapViewDirections from 'react-native-maps-directions';
 import {MaterialIcons} from "@expo/vector-icons";
+import { MapTypes } from "../../types/Screen.types";
 
-export default function App() {
+export default function App({ navigation }: MapTypes) {
   const mapEl=useRef(null);
   const [origin,setOrigin]=useState(null);
   const [destination,setDestination]=useState(null);
   const [distance,setDistance]=useState(null);
   const [price, setPrice]=useState(null);
+  function handleMap() {
+    navigation.navigate("Pagamento");
+  }
 
   useEffect(()=>{
     (async function(){
@@ -97,7 +101,7 @@ export default function App() {
   {distance &&
     <View style={css.distance}>
         <Text style={css.distance__text}>Distância: {distance.toFixed(2).replace('.',',')}km</Text>
-        <TouchableOpacity style={css.price}>
+        <TouchableOpacity style={css.price} onPress={handleMap}>
             <Text style={css.price__text}><MaterialIcons name="payment" size={24} color="white" /> Pagar R${price.toFixed(2).replace('.',',')}</Text>
         </TouchableOpacity>
     </View>

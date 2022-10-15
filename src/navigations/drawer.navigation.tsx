@@ -6,6 +6,7 @@ import colors from "../styles/colors";
 import { ChatScreen, MapScreen, PerfilScreen, SairScreen, CameraScreen, ArquivoScreen, QrCodeScreen, VideoAudioScreen } from "../screens";
 import DrawerNavigation from "./drawer.navigation";
 import ChatNavigation from "./chat.navigation";
+import MapNavigation from "./map.navigation";
 
 const Drawer = createDrawerNavigator();
 
@@ -45,7 +46,7 @@ export default function HomeRoute() {
             /> */}
             <Drawer.Screen
                 name="Mapa"
-                component={MapScreen}
+                component={MapNavigation}
                 options={{
                     drawerLabel: "Mapa",
                     drawerIcon: () => (

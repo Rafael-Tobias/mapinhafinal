@@ -20,3 +20,13 @@ type ChatScreenNavigationProp = StackNavigationProp<ChatStackParamList, 'Chat'>
 export type ChatTypes = {
   navigation: ChatScreenNavigationProp
 }
+
+//Map Stack
+export type MapStackParamList = {
+  Map: undefined
+  Pagamento: undefined
+}
+type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Map'>
+export type MapTypes = {
+  navigation: MapScreenNavigationProp
+}
