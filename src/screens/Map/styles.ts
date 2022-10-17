@@ -19,26 +19,28 @@ const css = StyleSheet.create({
         flex:1,
         justifyContent: 'center',
         alignItems:'center',
-        padding: 10
+        padding: 5
     },
     distance__text:{
         fontSize:20,
-        fontWeight:'bold'
+        fontWeight:'bold',
     },
     price:{
         backgroundColor: 'green',
-        padding: 7,
-        borderRadius:4,
-        marginTop:30,
+        padding: 15,
+        borderRadius: 9,
         justifyContent:'center',
         alignItems: 'center',
-        width: 150
+        width: 380,
+        marginBottom: 40
+
     },
     price__text:{
         color:'#fff',
         fontWeight: 'bold',
-        fontSize: 20
+    },
+    acertaPreco:{
+        backgroundColor: "blue",
     }
-
 });
 export {css};

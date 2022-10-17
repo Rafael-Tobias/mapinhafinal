@@ -9,6 +9,7 @@ import config from "../../config/index.json"
 import MapViewDirections from 'react-native-maps-directions';
 import {MaterialIcons} from "@expo/vector-icons";
 import { MapTypes } from "../../types/Screen.types";
+import styles from '../Login/styles';
 
 export default function App({ navigation }: MapTypes) {
   const mapEl=useRef(null);
@@ -100,9 +101,10 @@ export default function App({ navigation }: MapTypes) {
 
   {distance &&
     <View style={css.distance}>
-        <Text style={css.distance__text}>Distância: {distance.toFixed(2).replace('.',',')}km</Text>
         <TouchableOpacity style={css.price} onPress={handleMap}>
-            <Text style={css.price__text}><MaterialIcons name="payment" size={24} color="white" /> Pagar R${price.toFixed(2).replace('.',',')}</Text>
+            <Text style={styles.container}>{price.toFixed(2).replace('.',',')}</Text>
+            <Text style={css.price__text}><MaterialIcons name="motorcycle" size={50} color="white" /></Text> 
+          <Text>Distância: {distance.toFixed(2).replace('.',',')}km</Text>
         </TouchableOpacity>
     </View>
   }
